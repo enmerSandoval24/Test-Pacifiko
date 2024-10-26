@@ -1,9 +1,52 @@
 <?php
+require_once '../conection/config.php';
 class ProductOperations {
+    private $config;
     private $conn;
 
-    public function __construct($db) {
-        $this->conn = $db->conn; 
+    public function __construct() {
+        $this->config = new config();
+        $this->conn = $this->config->conn;
+    }
+
+    public function getProducts() {
+        $query = "SELECT * FROM products";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $data = [];
+
+        while($row = $result->fetch_assoc()){
+            $data[] = $row;
+        }
+
+        return $data;
+    }
+
+    public function getProductByName($productName) {
+        $query = "SELECT * FROM products WHERE product_name = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt -> bind_param("s", $productName);
+        $stmt -> execute();
+        $result = $stmt->get_result();
+
+        return $result;
+    }
+
+    public function getCustomers(){
+        $query = "SELECT * FROM customers";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $data = [];
+
+        while($row = $result->fetch_assoc()){
+            $data[] = $row;
+        }
+
+        return $data;
     }
 
     public function insertProduct($productName, $price, $stockQuantity) {
@@ -52,5 +95,44 @@ class ProductOperations {
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC); 
     }
+
+    public function createOrder($customerId, $orderDate) {
+        $query = "INSERT INTO orders (customer_id, order_date) VALUES (?, ?)";   
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("is", $customerId, $orderDate);
+        $stmt->execute();
+        $orderId = $this->conn->insert_id; 
+        $stmt->close();
+        
+        return $orderId;
+    }
+    
+    public function addOrderItem($orderId, $productId, $quantity, $subtotal) {
+        $query = "INSERT INTO orderitems (order_id, product_id, quantity, subtotal) VALUES (?, ?, ?, ?)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("iiid", $orderId, $productId, $quantity, $subtotal); 
+        $stmt->execute();
+        $stmt->close(); 
+    }
+    
+    
+    public function updateStock($productId, $quantity) {
+        $query = "UPDATE products SET stock_quantity = stock_quantity - ? WHERE product_id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("ii", $quantity, $productId); 
+        $stmt->execute();
+        $stmt->close(); 
+    }
+    
+    
+    public function updateOrderTotal($orderId, $total) {
+        $query = "UPDATE orders SET total = ? WHERE order_id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("di", $total, $orderId); 
+        $stmt->execute();
+        $stmt->close(); 
+    }
+    
+    
 }
 ?>

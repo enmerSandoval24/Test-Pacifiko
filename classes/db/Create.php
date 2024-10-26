@@ -1,4 +1,5 @@
 <?php 
+    require_once '../conection/config.php';
     class Create{
         private $conn;
 

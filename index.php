@@ -17,7 +17,6 @@
         }
     }
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -27,6 +26,23 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="classes/manager/Register.php">Registrar Usuario</a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="classes/manager/Products.php">Productos</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
     <div class="container">
         <h1 class="text-center display-1">Lista de Usuarios</h1>
         <div class="container text-start">
@@ -34,7 +50,6 @@
                 <input type="number" class="form-control form-control-sm" name="idUser" id="idUser" placeholder="id" style="max-width: 100px" >
                 <br>
                 <button type="submit" class="btn btn-primary">Buscar</button>
-                <a  class="btn btn-info text-end" href="classes/manager/Register.php">Registrarse</a>
             </form>    
         </div>
         <table class="table">
